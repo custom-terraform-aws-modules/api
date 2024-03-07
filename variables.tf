@@ -91,6 +91,10 @@ variable "routes" {
     condition     = !contains([for v in var.routes : startswith(try(v["function_arn"], null), "arn:aws:lambda:")], false)
     error_message = "Function ARN of routes must be valid"
   }
+  validation {
+    condition     = !contains([for v in var.routes : startswith(try(v["invoke_arn"], null), "arn:aws:apigateway:")], false)
+    error_message = "Invoke ARN of routes must be valid"
+  }
 }
 
 variable "tags" {

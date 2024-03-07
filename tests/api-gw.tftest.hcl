@@ -41,7 +41,7 @@ run "invalid_route_method" {
         route        = "/test"
         method       = "GET"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -49,7 +49,7 @@ run "invalid_route_method" {
         route        = "/test"
         method       = "FOO"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -57,7 +57,7 @@ run "invalid_route_method" {
         route        = "/test"
         method       = "DELETE"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       }
@@ -79,7 +79,7 @@ run "duplicate_route" {
         route        = "/test"
         method       = "GET"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -87,7 +87,7 @@ run "duplicate_route" {
         route        = "/test"
         method       = "DELETE"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -95,7 +95,7 @@ run "duplicate_route" {
         route        = "/test"
         method       = "GET"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       }
@@ -117,7 +117,7 @@ run "invalid_route_function_arn" {
         route        = "/test"
         method       = "GET"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -125,7 +125,7 @@ run "invalid_route_function_arn" {
         route        = "/test"
         method       = "DELETE"
         function_arn = "arn:aws:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -133,7 +133,7 @@ run "invalid_route_function_arn" {
         route        = "/test"
         method       = "POST"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       }
@@ -155,7 +155,7 @@ run "valid_routes" {
         route        = "/test"
         method       = "GET"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -163,7 +163,7 @@ run "valid_routes" {
         route        = "/test"
         method       = "DELETE"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       },
@@ -171,7 +171,7 @@ run "valid_routes" {
         route        = "/test"
         method       = "POST"
         function_arn = "arn:aws:lambda:test"
-        invoke_arn   = "arn:aws:lambda-invoke:test"
+        invoke_arn   = "arn:aws:apigateway:test"
         burst_limit  = 1000
         rate_limit   = 0.01
       }
@@ -192,6 +192,44 @@ run "invalid_log_config" {
   }
 
   expect_failures = [var.log_config]
+}
+
+run "invalid_route_invoke_arn" {
+  command = plan
+
+  variables {
+    test       = true
+    identifier = "abc"
+    domain     = "test.com"
+    routes = [
+      {
+        route        = "/test"
+        method       = "GET"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      },
+      {
+        route        = "/test"
+        method       = "DELETE"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:api:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      },
+      {
+        route        = "/test"
+        method       = "POST"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      }
+    ]
+  }
+
+  expect_failures = [var.routes]
 }
 
 run "valid_log_config" {

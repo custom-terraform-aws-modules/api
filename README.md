@@ -77,7 +77,7 @@ module "api" {
       route        = "/foo"
       method       = "GET"
       function_arn = "arn:aws:lambda:test"
-      invoke_arn   = "arn:aws:lambda-invoke:test"
+      invoke_arn   = "arn:aws:apigateway:test"
       burst_limit  = 1000
       rate_limit   = 0.01
     },
@@ -85,7 +85,7 @@ module "api" {
       route        = "/foo"
       method       = "DELETE"
       function_arn = "arn:aws:lambda:test"
-      invoke_arn   = "arn:aws:lambda-invoke:test"
+      invoke_arn   = "arn:aws:apigateway:test"
       burst_limit  = 1000
       rate_limit   = 0.01
     },
@@ -93,7 +93,7 @@ module "api" {
       route        = "/foo"
       method       = "POST"
       function_arn = "arn:aws:lambda:test"
-      invoke_arn   = "arn:aws:lambda-invoke:test"
+      invoke_arn   = "arn:aws:apigateway:test"
       burst_limit  = 1000
       rate_limit   = 0.01
     }
