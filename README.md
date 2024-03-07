@@ -68,7 +68,7 @@ This module provides an API Gateway with the option to define routes which invok
 module "api" {
   source = "github.com/custom-terraform-aws-modules/api"
 
-  identifier  = "example-website-dev"
+  identifier  = "example-api-dev"
   description = "This API Gateway is meant to show an example."
   domain      = "api.example.com"
 
