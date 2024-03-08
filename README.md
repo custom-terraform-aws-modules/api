@@ -58,9 +58,9 @@ This module provides an API Gateway with the option to define routes which invok
 
 ## Outputs
 
-| Name | Description                |
-| ---- | -------------------------- |
-| id   | The ID of the API Gateway. |
+| Name           | Description                                                                 |
+| -------------- | --------------------------------------------------------------------------- |
+| log_group_name | The name of the CloudWatch log group created for the API Gateway to log to. |
 
 ## Example
 
