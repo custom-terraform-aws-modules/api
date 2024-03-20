@@ -51,7 +51,7 @@ resource "aws_acm_certificate_validation" "main" {
 
 resource "aws_cloudwatch_log_group" "main" {
   count             = var.log_config != null ? 1 : 0
-  name              = "/aws/api-gw/${var.identifier}"
+  name              = "${var.identifier}-api-gw"
   retention_in_days = try(var.log_config["retention_in_days"], null)
 
   tags = var.tags
