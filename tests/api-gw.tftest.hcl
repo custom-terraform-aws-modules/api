@@ -11,9 +11,9 @@ run "invalid_identifier" {
   command = plan
 
   variables {
-    test       = true
     identifier = "ab"
     domain     = "test.com"
+    zone_id    = "test-zone"
   }
 
   expect_failures = [var.identifier]
@@ -23,9 +23,9 @@ run "valid_identifier" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
   }
 }
 
@@ -33,9 +33,9 @@ run "invalid_route_method" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
     routes = [
       {
         route        = "/test"
@@ -71,9 +71,9 @@ run "duplicate_route" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
     routes = [
       {
         route        = "/test"
@@ -109,9 +109,9 @@ run "invalid_route_function_arn" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
     routes = [
       {
         route        = "/test"
@@ -147,9 +147,9 @@ run "valid_routes" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
     routes = [
       {
         route        = "/test"
@@ -183,9 +183,9 @@ run "invalid_log_config" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
     log_config = {
       retention_in_days = 200
     }
@@ -198,9 +198,9 @@ run "invalid_route_invoke_arn" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
     routes = [
       {
         route        = "/test"
@@ -236,9 +236,9 @@ run "valid_log_config" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
     log_config = {
       retention_in_days = 7
     }

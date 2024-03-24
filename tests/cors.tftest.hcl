@@ -11,9 +11,9 @@ run "duplicate_allow_methods" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
 
     cors_config = {
       allow_methods = ["GET", "POST", "GET", "DELETE"]
@@ -29,9 +29,9 @@ run "duplicate_allow_origins" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
 
     cors_config = {
       allow_methods = ["GET", "POST", "DELETE"]
@@ -47,9 +47,9 @@ run "duplicate_allow_headers" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
 
     cors_config = {
       allow_methods = ["GET", "POST", "DELETE"]
@@ -65,9 +65,9 @@ run "invalid_allow_methods" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
 
     cors_config = {
       allow_methods = ["GET", "POST", "FOO", "DELETE"]
@@ -83,9 +83,9 @@ run "valid_cors_config" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
 
     cors_config = {
       allow_methods = ["GET", "POST", "DELETE"]

@@ -18,6 +18,12 @@ variable "domain" {
   type        = string
 }
 
+variable "zone_id" {
+  description = "ID of the public hosted zone for the domain."
+  type        = string
+  default     = ""
+}
+
 variable "log_config" {
   description = "An object for the definition of a CloudWatch log for the API Gateway."
   type = object({
@@ -101,10 +107,4 @@ variable "tags" {
   description = "A map of tags to add to all resources."
   type        = map(string)
   default     = {}
-}
-
-variable "test" {
-  description = "A flag for wether or not creating a test environment to conduct unit tests with."
-  type        = bool
-  default     = false
 }

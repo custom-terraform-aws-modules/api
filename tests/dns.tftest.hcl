@@ -11,9 +11,9 @@ run "base_domain_split_without_sub_domain" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "test.com"
+    zone_id    = "test-zone"
   }
 
   assert {
@@ -26,9 +26,9 @@ run "base_domain_split_with_single_sub_domain" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "www.test.com"
+    zone_id    = "test-zone"
   }
 
   assert {
@@ -41,9 +41,9 @@ run "base_domain_split_with_multiple_sub_domain" {
   command = plan
 
   variables {
-    test       = true
     identifier = "abc"
     domain     = "www.blog.api.test.com"
+    zone_id    = "test-zone"
   }
 
   assert {

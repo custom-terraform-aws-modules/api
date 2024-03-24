@@ -9,14 +9,14 @@ locals {
 
 # get public zone for base domain (must be already present in account)
 data "aws_route53_zone" "main" {
-  count        = !var.test ? 1 : 0
+  count        = length(var.zone_id) < 1 ? 1 : 0
   name         = local.base_domain
   private_zone = false
 }
 
-# conditionally set the zone_id to a dummy value for unit tests to run
+# conditionally set the zone_id to avoid duplication of conditions
 locals {
-  zone_id = !var.test ? data.aws_route53_zone.main[0].id : "testzone123"
+  zone_id = length(var.zone_id) < 1 ? data.aws_route53_zone.main[0].id : var.zone_id
 }
 
 resource "aws_acm_certificate" "main" {
