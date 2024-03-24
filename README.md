@@ -27,7 +27,6 @@ This module provides an API Gateway with the option to define routes which invok
 | description | Short text of what the API Gateway is trying to accomplish.                                                                                                  | `string`       | ""      |    no    |
 | domain      | Custom domain pointed to the API Gateway.                                                                                                                    | `string`       | n/a     |   yes    |
 | zone_id     | ID of the public hosted zone for the domain. (When not specified the public hosted zone of the domain will be pulled with a data resource from your account) | `string`       | ""      |    no    |
-| rate_limit  | Rate limit for traffic from the same IP address over a period of 5 minutes.                                                                                  | `number`       | 0       |    no    |
 | routes      | A list of objects for the definition of routes in the API Gateway.                                                                                           | `list(object)` | []      |    no    |
 | log_config  | An object for the definition of a CloudWatch log for the API Gateway.                                                                                        | `object`       | null    |    no    |
 | cors_config | An object for the definition of the CORS configuration for the API Gateway.                                                                                  | `object`       | null    |    no    |
