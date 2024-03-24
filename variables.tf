@@ -24,6 +24,12 @@ variable "zone_id" {
   default     = ""
 }
 
+variable "rate_limit" {
+  description = "Rate limit for traffic from the same IP address over a period of 5 minutes."
+  type        = number
+  default     = 0
+}
+
 variable "log_config" {
   description = "An object for the definition of a CloudWatch log for the API Gateway."
   type = object({

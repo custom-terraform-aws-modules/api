@@ -171,3 +171,64 @@ resource "aws_route53_record" "main" {
     evaluate_target_health = false
   }
 }
+
+################################
+# WAF Web ACL                  #
+################################
+
+resource "aws_wafv2_web_acl" "main" {
+  count = var.rate_limit > 0 ? 1 : 0
+  name  = "${var.identifier}-api-gw"
+  scope = "REGIONAL"
+
+  default_action {
+    allow {}
+  }
+
+  custom_response_body {
+    key          = "blocked_request_custom_response"
+    content      = "{\n    \"error\":\"Too Many Requests.\"\n}"
+    content_type = "APPLICATION_JSON"
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "${var.identifier}-api-gw"
+    sampled_requests_enabled   = true
+  }
+
+  rule {
+    name     = "RateLimit"
+    priority = 1
+
+    action {
+      block {
+        custom_response {
+          custom_response_body_key = "blocked_request_custom_response"
+          response_code            = 429
+        }
+      }
+    }
+
+    statement {
+      rate_based_statement {
+        aggregate_key_type = "IP"
+        limit              = var.rate_limit
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "${var.identifier}-api-gw-RateLimit"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  tags = var.tags
+}
+
+resource "aws_wafv2_web_acl_association" "main" {
+  count        = var.rate_limit > 0 ? 1 : 0
+  resource_arn = aws_apigatewayv2_stage.main.arn
+  web_acl_arn  = aws_wafv2_web_acl.main[0].arn
+}
