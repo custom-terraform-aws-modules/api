@@ -78,8 +78,8 @@ variable "routes" {
     method       = string
     function_arn = string
     invoke_arn   = string
-    burst_limit  = number
-    rate_limit   = number
+    burst_limit  = optional(number, null)
+    rate_limit   = optional(number, null)
   }))
   default = []
   validation {
@@ -100,6 +100,12 @@ variable "routes" {
   validation {
     condition     = !contains([for v in var.routes : startswith(try(v["invoke_arn"], null), "arn:aws:apigateway:")], false)
     error_message = "Invoke ARN of routes must be valid"
+  }
+  validation {
+    condition = !contains(
+      [for v in var.routes : (v["rate_limit"] == null && v["burst_limit"] == null) || (
+    v["rate_limit"] != null && v["burst_limit"] != null)], false)
+    error_message = "Rate and burst limit of routes must be either both defined or both undefined"
   }
 }
 

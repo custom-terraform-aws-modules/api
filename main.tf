@@ -52,7 +52,7 @@ resource "aws_acm_certificate_validation" "main" {
 resource "aws_cloudwatch_log_group" "main" {
   count             = var.log_config != null ? 1 : 0
   name              = "${var.identifier}-api-gw"
-  retention_in_days = try(var.log_config["retention_in_days"], null)
+  retention_in_days = var.log_config["retention_in_days"]
 
   tags = var.tags
 }
@@ -81,9 +81,9 @@ resource "aws_apigatewayv2_api" "main" {
   dynamic "cors_configuration" {
     for_each = var.cors_config != null ? [1] : []
     content {
-      allow_methods = try(var.cors_config["allow_methods"], null)
-      allow_origins = try(var.cors_config["allow_origins"], null)
-      allow_headers = try(var.cors_config["allow_headers"], null)
+      allow_methods = var.cors_config["allow_methods"]
+      allow_origins = var.cors_config["allow_origins"]
+      allow_headers = var.cors_config["allow_headers"]
     }
   }
 
@@ -93,7 +93,7 @@ resource "aws_apigatewayv2_api" "main" {
 resource "aws_apigatewayv2_integration" "main" {
   count              = length(var.routes)
   api_id             = aws_apigatewayv2_api.main.id
-  integration_uri    = try(var.routes[count.index]["invoke_arn"], null)
+  integration_uri    = var.routes[count.index]["invoke_arn"]
   integration_type   = "AWS_PROXY"
   integration_method = "POST"
 }
@@ -101,7 +101,7 @@ resource "aws_apigatewayv2_integration" "main" {
 resource "aws_apigatewayv2_route" "main" {
   count     = length(var.routes)
   api_id    = aws_apigatewayv2_api.main.id
-  route_key = "${try(var.routes[count.index]["method"], null)} ${try(var.routes[count.index]["route"], null)}"
+  route_key = "${var.routes[count.index]["method"]} ${var.routes[count.index]["route"]}"
   target    = "integrations/${aws_apigatewayv2_integration.main[count.index].id}"
 }
 
@@ -109,9 +109,17 @@ resource "aws_lambda_permission" "main" {
   count         = length(var.routes)
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = try(var.routes[count.index]["function_arn"], null)
+  function_name = var.routes[count.index]["function_arn"]
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*${try(var.routes[count.index]["route"], null)}"
+  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*${var.routes[count.index]["route"]}"
+}
+
+locals {
+  rate_limited_routes = [for v in var.routes : {
+    route_key   = "${v["method"]} ${v["route"]}"
+    burst_limit = v["burst_limit"]
+    rate_limit  = v["rate_limit"]
+  } if v["burst_limit"] != null && v["rate_limit"] != null]
 }
 
 resource "aws_apigatewayv2_stage" "main" {
@@ -120,12 +128,12 @@ resource "aws_apigatewayv2_stage" "main" {
   auto_deploy = true
 
   dynamic "route_settings" {
-    for_each = var.routes
+    for_each = local.rate_limited_routes
 
     content {
-      route_key              = "${try(route_settings.value["method"], null)} ${try(route_settings.value["route"], null)}"
-      throttling_burst_limit = try(route_settings.value["burst_limit"], null)
-      throttling_rate_limit  = try(route_settings.value["rate_limit"], null)
+      route_key              = route_settings.value["route_key"]
+      throttling_burst_limit = route_settings.value["burst_limit"]
+      throttling_rate_limit  = route_settings.value["rate_limit"]
     }
   }
 

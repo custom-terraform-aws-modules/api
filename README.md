@@ -40,8 +40,8 @@ This module provides an API Gateway with the option to define routes which invok
 | method       | String of the HTTP method. Valid values: 'GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD', 'CONNECT', 'TRACE'. | `string` | n/a     |   yes    |
 | function_arn | ARN of the Lambda function that will be invoked by the route.                                                            | `string` | n/a     |   yes    |
 | invoke_arn   | Invoke ARN of the Lambda function that will be invoked by the route.                                                     | `string` | n/a     |   yes    |
-| burst_limit  | Throttling burst limit for the route.                                                                                    | `number` | n/a     |   yes    |
-| rate_limit   | Throttling rate limit for the route.                                                                                     | `number` | n/a     |   yes    |
+| burst_limit  | Throttling burst limit for the route.                                                                                    | `number` | null    |    no    |
+| rate_limit   | Throttling rate limit for the route.                                                                                     | `number` | null    |    no    |
 
 ### `log_config`
 
@@ -87,8 +87,6 @@ module "api" {
       method       = "DELETE"
       function_arn = "arn:aws:lambda:test"
       invoke_arn   = "arn:aws:apigateway:test"
-      burst_limit  = 1000
-      rate_limit   = 0.01
     },
     {
       route        = "/foo"

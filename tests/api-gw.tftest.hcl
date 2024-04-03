@@ -244,3 +244,116 @@ run "valid_log_config" {
     }
   }
 }
+
+run "only_burst_limit" {
+  command = plan
+
+  variables {
+    identifier = "abc"
+    domain     = "test.com"
+    zone_id    = "test-zone"
+    routes = [
+      {
+        route        = "/test"
+        method       = "GET"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      },
+      {
+        route        = "/test"
+        method       = "DELETE"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+      },
+      {
+        route        = "/test"
+        method       = "POST"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      }
+    ]
+  }
+
+  expect_failures = [var.routes]
+}
+
+run "only_rate_limit" {
+  command = plan
+
+  variables {
+    identifier = "abc"
+    domain     = "test.com"
+    zone_id    = "test-zone"
+    routes = [
+      {
+        route        = "/test"
+        method       = "GET"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      },
+      {
+        route        = "/test"
+        method       = "DELETE"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        rate_limit   = 0.01
+      },
+      {
+        route        = "/test"
+        method       = "POST"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      }
+    ]
+  }
+
+  expect_failures = [var.routes]
+}
+
+run "some_rate_limited_routes" {
+  command = plan
+
+  variables {
+    identifier = "abc"
+    domain     = "test.com"
+    zone_id    = "test-zone"
+    routes = [
+      {
+        route        = "/test"
+        method       = "GET"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      },
+      {
+        route        = "/test"
+        method       = "DELETE"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+      },
+      {
+        route        = "/test"
+        method       = "POST"
+        function_arn = "arn:aws:lambda:test"
+        invoke_arn   = "arn:aws:apigateway:test"
+        burst_limit  = 1000
+        rate_limit   = 0.01
+      }
+    ]
+  }
+
+  assert {
+    condition     = length(local.rate_limited_routes) == 2
+    error_message = "Unexpected amount of rate limited routes was created"
+  }
+}
